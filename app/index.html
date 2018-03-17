@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Event Testing</title>
+    <!--CSS-->
+    <link rel="stylesheet" href="../common/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/css/simpleTable.css">
+
+    <!--<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular-animate.min.js"></script>-->
+</head>
+<body ng-app="myapp">
+    <div ng-controller="hideCtrl">
+        <button ng-click="count=count+1">Click Me！</button>
+        <p> {{ count }}</p>
+
+        <button ng-click="toggle()">Hide/Show</button>
+        <!--<p> {{ varname }}</p>-->
+        <p ng-show="varname">
+            <label>firstname: {{ firstname }} </label>
+            <label>lastname:  {{ lastname }}</label>
+            <label>fullname: {{ fullname }} </label>
+        </p>
+
+        <!--directive-->
+        <simple-directive></simple-directive>
+
+        <form>
+            Check to show a header
+            <input type="checkbox" ng-model="checkedflag">
+        </form>
+        <h1 ng-show="checkedflag">My Header Checked</h1>
+
+        <form>
+            选择一个选项：
+            <input type="radio" ng-model="radioOpn" value="Dog">Dogs
+            <input type="radio" ng-model="radioOpn" value="Cat">Cats
+            <input type="radio" ng-model="radioOpn" value="Tutorial">Tutorials
+        </form>
+
+        <h1>you choose a {{radioOpn}}</h1>
+
+        <select ng-init="selectedItem=names[0]" ng-model="selectedItem" ng-options="x.Name for x in names">
+        </select>
+        <h1>you choose {{selectedItem}} which can pass into your API as parameter!</h1>
+
+        <select ng-init="selectedItem2='ASC'" ng-model="selectedItem2" ng-options="x for x in ['ASC', 'DESC']">
+        </select>
+
+
+
+        <table>
+            <tr ng-repeat="x in names | orderBy:'Country':true">
+                <td>{{ $index +1 }}</td>
+                <td> {{ x.Name }}</td>
+                <td> {{ x.Country }}</td>
+            </tr>
+        </table>
+
+        <input type="text" size="30" ng-model="test">
+        <ul>
+            <li ng-repeat="x in names | filter:test | orderBy:'Country'">
+                {{ (x.Name | uppercase) + ', ' + x.Country }}
+            </li>
+        </ul>
+
+        <h2>Validation Example</h2>
+
+        <form  ng-init="user='User';email='Email'" name="myForm" novalidate>
+
+            <p>用户名:
+                <br>
+                <input type="text" name="user" ng-model="user" required>
+                <span style="color:yellow" ng-show="myForm.user.$dirty && myForm.user.$invalid">
+                    <span ng-show="myForm.user.$error.required">用户名是必须的。</span>
+                </span>
+            </p>
+
+            <p>邮箱:<br>
+                <input type="email" name="email" ng-model="email" required>
+                <span style="color:yellow" ng-show="myForm.email.$dirty && myForm.email.$invalid">
+                    <span ng-show="myForm.email.$error.required">邮箱是必须的。</span>
+                    <span ng-show="myForm.email.$error.email">非法的邮箱。</span>
+                </span>
+            </p>
+
+            <p>
+                <input type="submit"
+                       ng-disabled="myForm.user.$dirty && myForm.user.$invalid || myForm.email.$dirty && myForm.email.$invalid">
+            </p>
+
+        </form>
+
+        <div ng-include="'html/subSection.html'"></div>
+    </div>
+
+    <div class="container" ng-controller="namesCtrl">
+
+        <h3>Users</h3>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>编辑</th>
+                <th>名</th>
+                <th>姓</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="user in users">
+                <td>
+                    <button class="btn" ng-click="editUser(user.id)">
+                        <span class="glyphicon glyphicon-pencil"></span>编辑
+                    </button>
+                </td>
+                <td>{{ user.fName }}</td>
+                <td>{{ user.lName }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <hr>
+        <button class="btn btn-success" ng-click="editUser('new')">
+            <span class="glyphicon glyphicon-user"></span>创建新用户
+        </button>
+        <hr>
+
+        <h3 ng-show="edit">创建新用户:</h3>
+        <h3 ng-hide="edit">编辑用户:</h3>
+
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">名:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="fName" ng-disabled="!edit" placeholder="名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">姓:</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="lName" ng-disabled="!edit" placeholder="姓">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">密码:</label>
+                <div class="col-sm-10">
+                    <input type="password" ng-model="passw1" placeholder="密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">重复密码:</label>
+                <div class="col-sm-10">
+                    <input type="password" ng-model="passw2" placeholder="重复密码">
+                </div>
+            </div>
+        </form>
+
+        <hr>
+        <button class="btn btn-success" ng-disabled="error || incomplete">
+            <span class="glyphicon glyphicon-save"></span>修改
+        </button>
+
+    </div>
+    </div>
+
+    <div class="container" style="background-color: yellow" ng-controller="noteCtrl">
+        <label>笔记</label>
+        <textarea style="background-size: auto" ng-model="text">
+
+        </textarea>
+        <!--<p>{{text}} &#45;&#45; {{text.length}} &#45;&#45; {{leftCount}}</p>-->
+        <div>
+        <button ng-click="save()">保存</button>
+        <button ng-click="clean()">清除</button>
+        </div>
+        <br>
+        <p>剩余字数 : {{ leftCount - text.length}}</p>
+    </div>
+
+    <h1>this is ng-view starts</h1>
+    <div ng-view></div>
+    <h1>this is ng-view ends</h1>
+
+    <!--scripts-->
+    <!--external libs-->
+    <script src="../common/js/angularjs/1.4.6/angular.min.js"></script>
+    <script src="../common/js/angularjs/1.4.6/angular-animate.min.js"></script>
+    <script src="../common/js/angularjs/angular-route.js"></script>
+
+    <!--custom libs-->
+    <script src="../app/app.js"></script>
+    <script src="../app/controller/simpleController.js"></script>
+    <script src="../app/controller/namesController.js"></script>
+    <script src="../app/directive/simpleDirective.js"></script>
+    <script src="../app/controller/noteCtrl.js"></script>
+    <script src="../app/controller/partialPage.js"></script>
+</body>
+</html>
